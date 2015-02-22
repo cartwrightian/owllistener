@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class ReceiveMulticastMessages {
 	private static final Logger logger = LoggerFactory.getLogger(ReceiveMulticastMessages.class);
-
+	
 	//
 	private static final String OWL_MULTICAST_ADDRESS = "224.192.32.19";
 	private static final int OWL_PORT = 22600;

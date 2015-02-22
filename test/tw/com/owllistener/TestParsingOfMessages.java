@@ -22,9 +22,11 @@ public class TestParsingOfMessages {
 					"<chan id='1'><curr units='w'>0.00</curr><day units='wh'>0.00</day></chan>"+
 					"<chan id='2'><curr units='w'>0.00</curr>"+"<day units='wh'>0.00</day></chan>"+
 				"</electricity>";
+	
+	private String exampleWeather = "<weather id='4437190010E7' code='116'><temperature>5.00</temperature><text>Partly Cloudy</text></weather>";
 
 	@Test
-	public void shouldParseXmlMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+	public void shouldParseXmlEnergyMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		ParseMessages parser = new ParseMessages();
 		
 		EnergyMessage message = parser.parse(example);
@@ -35,6 +37,15 @@ public class TestParsingOfMessages {
 		EnergyMessageChannel channel = message.getChannel(0);
 		assertEquals(new Double(354.00), channel.getCurrent());
 		assertEquals(new Double(3971.56), channel.getDayTotal());
+	}
+	
+	@Test
+	public void shouldParseXmlWeatherMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+		ParseMessages parser = new ParseMessages();
+		
+		EnergyMessage message = parser.parse(exampleWeather);
+		assertNull(message);
+		
 	}
 
 }

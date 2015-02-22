@@ -10,7 +10,6 @@ import tw.com.owllistener.network.ReceiveMulticastMessages;
 
 public class TestReceiveMulticastMessages {
 	
-
 	@Test
 	public void shouldReceiveMulticastMessage() throws IOException {
 		ReceiveMulticastMessages receiver = new ReceiveMulticastMessages();

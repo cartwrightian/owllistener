@@ -39,6 +39,14 @@ public class ParseMessages {
 		
 		XPath xpath = xpathFactory.newXPath();
 		
+		String nodeName = document.getDocumentElement().getNodeName();
+		logger.info("Received message of type: " + nodeName);
+		
+		if (!"electricity".equals(nodeName)) {
+			logger.info("Ignoring none electricity message of type " + nodeName);
+			return null;
+		}
+		
 		String id = xpath.evaluate("/electricity/@id", document);
 		logger.debug("id is: " +id);
 		EnergyMessage message = new EnergyMessage(id);

@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+PACKAGE_NAME=$SYNOPKG_PKGNAME
+PACKAGE_LOC="/var/packages/${PACKAGE_NAME}"
+
+#echo PACKAGE_LOC is ${PACKAGE_LOC}  >> /tmp/owllistener.log
+#/var/packages/JavaManager/target/Java/bin/java -version 2> /tmp/owllistener.log
+
+	case "$1" in
+	 start)
+	 	/var/packages/JavaManager/target/Java/bin/java -jar ${PACKAGE_LOC}/target/owllistener.jar /volume1/docs/googleDrive/owl.csv & 
+	 	PID=$!
+	 	echo $PID > /tmp/owllistener.pid
+	 	exit 0;
+	 ;;
+	 
+	 stop)
+	 	echo "Stopping owllistener"
+	 	PID=`cat /tmp/owllistener.pid`
+	 	kill -1 $PID
+	 	exit 0;
+	 ;;
+	 
+	 status)
+	 	PID=`cat /tmp/owllistener.pid`
+	 	 if  if kill -0 $PID 
+		then
+		  echo Running.
+		  exit 0;
+		else
+		  echo Not Running.
+		  exit 1;
+		 fi
+	 ;;
+	 
+	 log)
+	 	echo "/var/log/owllistener.log";
+	 ;;
+ esac
