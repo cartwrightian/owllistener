@@ -1,6 +1,7 @@
 package tw.com.owllistener.network;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -9,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-public class EnergyMonitor {
+import tw.com.owllistener.ProvidesDate;
+
+public class EnergyMonitor implements ProvidesDate {
 	private static final Logger logger = LoggerFactory.getLogger(EnergyMonitor.class);
-	ReceiveMessages receiver;
-	SavesReadings recorder;
+	private ReceiveMessages receiver;
+	private SavesReadings recorder;
 	
 	public void loop(String filename) {
 		logger.info("Beginning processing, filename is " +filename);
@@ -23,7 +26,7 @@ public class EnergyMonitor {
 			logger.error("Unable to start listening", e);
 			return;
 		}
-		recorder = new SavesReadings(filename);
+		recorder = new SavesReadings(filename, this);
 		
 		//
 		boolean running = true;
@@ -46,6 +49,11 @@ public class EnergyMonitor {
 			} 
 		}
 		logger.warn("Stopped");
+	}
+
+	@Override
+	public Date getDate() {
+		return new Date();
 	}
 
 }

@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -21,15 +23,15 @@ import tw.com.owllistener.network.EnergyMessage;
 import tw.com.owllistener.network.EnergyMessageChannel;
 import tw.com.owllistener.network.SavesReadings;
 
-public class TestRecordsMessages {
+public class TestRecordsMessages implements ProvidesDate {
 
 	private String filename;
 	private Path path;
 
 	@Before
 	public void beforeEachTestRuns() throws IOException {
-		filename = "testFilename.csv";
-		path = Paths.get(filename);
+		filename = "testFilename";
+		path = Paths.get(filename+"_30-11-1999.csv");
 		removeFile();
 	}
 	
@@ -44,14 +46,14 @@ public class TestRecordsMessages {
 	
 	@Test
 	public void shouldSaveMessageintoCsvFile() throws IOException, ParseException {
-		SavesReadings recorder = new SavesReadings(filename);
+		SavesReadings recorder = new SavesReadings(filename, this);
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(10.999, 10009.1);
 		message.addChannel(channel);
 		message.setBatteryLevel(90);
 		recorder.save(message);
 		
-		Reader in = new FileReader(filename);
+		Reader in = new FileReader(filename+"_30-11-1999.csv");
 		Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 		int count = 0;
 		CSVRecord lastRecord = null;
@@ -76,7 +78,7 @@ public class TestRecordsMessages {
 	
 	@Test
 	public void shouldAppendintoCsvFile() throws IOException, ParseException {
-		SavesReadings recorder = new SavesReadings(filename);
+		SavesReadings recorder = new SavesReadings(filename,this);
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(99.999, 22009.1);
 		message.addChannel(channel);
@@ -85,7 +87,7 @@ public class TestRecordsMessages {
 		recorder.save(message);
 		recorder.save(message);
 		
-		Reader in = new FileReader(filename);
+		Reader in = new FileReader(filename+"_30-11-1999.csv");
 		Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 		int count = 0;
 		for(@SuppressWarnings("unused") CSVRecord record : records) {
@@ -94,6 +96,17 @@ public class TestRecordsMessages {
 		in.close();
 		assertEquals(3, count);
 			
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Date getDate() {
+		try {
+			return new SimpleDateFormat("dd-MM-yyyy").parse("30-11-1999");
+		} catch (ParseException e) {
+			// test will fail
+		}
+		return null;
 	}
 
 }

@@ -1,5 +1,5 @@
 package="owllistener"
-version="0.1"
+version="0.2"
 maintainer="cartwright.ian@gmail.com"
 description="Needs Java installed. Listens for multicast packages from owl enegery monitor and save to a csv file"
 arch="noarch"

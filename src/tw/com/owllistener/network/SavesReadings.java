@@ -4,22 +4,28 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tw.com.owllistener.ProvidesDate;
+
 public class SavesReadings {
 	private static final Logger logger = LoggerFactory.getLogger(SavesReadings.class);
-	private File file;
+	private String filename;
+	private ProvidesDate provider;
 
-	public SavesReadings(String filename) {
-		file = new File(filename);
+	public SavesReadings(String filename, ProvidesDate provider) {
+		this.filename = filename;
+		this.provider = provider;
 	}
 
 	public void save(EnergyMessage message) throws IOException {
+		File file = new File(createFilename());
+
 		logger.info("Attempt to save received message to " + file.getAbsolutePath());
 		FileWriter appender = new FileWriter(file, true);
 		CSVPrinter printer = new CSVPrinter(appender , CSVFormat.DEFAULT);
@@ -37,6 +43,11 @@ public class SavesReadings {
 		printer.flush();
 		printer.close();
 		appender.close();
+	}
+
+	private String createFilename() {
+		String toAppend = new SimpleDateFormat("dd-MM-yyyy").format(provider.getDate());
+		return filename +"_"+toAppend+".csv";
 	}
 
 	private String getCurrentDateTime() {
