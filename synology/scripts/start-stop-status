@@ -8,7 +8,7 @@ PACKAGE_LOC="/var/packages/${PACKAGE_NAME}"
 
 	case "$1" in
 	 start)
-	 	/var/packages/JavaManager/target/Java/bin/java -jar ${PACKAGE_LOC}/target/owllistener.jar /volume1/docs/googleDrive/owl & 
+	 	/var/packages/JavaManager/target/Java/bin/java -jar ${PACKAGE_LOC}/target/owllistener.jar /volume1/docs/googleDrive/owlData/owl & 
 	 	PID=$!
 	 	echo $PID > /tmp/owllistener.pid
 	 	exit 0;
