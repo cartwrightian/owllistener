@@ -1,0 +1,47 @@
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.ajoberstar:gradle-git:1.2.0'
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+	compileOnly
+	testRuntime.extendsFrom(compileOnly)
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.5',
+            'ch.qos.logback:logback-classic:1.0.10',
+            'org.apache.commons:commons-csv:1.1'
+
+    testCompile 'junit:junit:4.11',
+            'org.easymock:easymock:3.2'
+}
+
+sourceSets {
+	main { java { srcDirs 'src' } }
+	test { java { srcDirs 'test' } }
+}
+
+sourceSets.all {
+    compileClasspath += configurations.compileOnly
+}
+
+

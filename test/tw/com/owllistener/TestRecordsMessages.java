@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import tw.com.owllistener.network.EnergyMessage;
 import tw.com.owllistener.network.EnergyMessageChannel;
-import tw.com.owllistener.network.SavesReadings;
+import tw.com.owllistener.network.SavesReadingsToCSV;
 
 public class TestRecordsMessages implements ProvidesDate {
 
@@ -46,12 +46,12 @@ public class TestRecordsMessages implements ProvidesDate {
 	
 	@Test
 	public void shouldSaveMessageintoCsvFile() throws IOException, ParseException {
-		SavesReadings recorder = new SavesReadings(filename, this);
+		SavesReadingsToCSV recorder = new SavesReadingsToCSV(filename, this);
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(10.999, 10009.1);
 		message.addChannel(channel);
 		message.setBatteryLevel(90);
-		recorder.save(message);
+		recorder.record(message);
 		
 		Reader in = new FileReader(filename+"_30-11-1999.csv");
 		Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
@@ -78,14 +78,14 @@ public class TestRecordsMessages implements ProvidesDate {
 	
 	@Test
 	public void shouldAppendintoCsvFile() throws IOException, ParseException {
-		SavesReadings recorder = new SavesReadings(filename,this);
+		SavesReadingsToCSV recorder = new SavesReadingsToCSV(filename,this);
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(99.999, 22009.1);
 		message.addChannel(channel);
 		message.setBatteryLevel(70);
-		recorder.save(message);
-		recorder.save(message);
-		recorder.save(message);
+		recorder.record(message);
+		recorder.record(message);
+		recorder.record(message);
 		
 		Reader in = new FileReader(filename+"_30-11-1999.csv");
 		Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);

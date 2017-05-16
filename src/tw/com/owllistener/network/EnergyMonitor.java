@@ -15,7 +15,7 @@ import tw.com.owllistener.ProvidesDate;
 public class EnergyMonitor implements ProvidesDate {
 	private static final Logger logger = LoggerFactory.getLogger(EnergyMonitor.class);
 	private ReceiveMessages receiver;
-	private SavesReadings recorder;
+	private RecordsReadings recorder;
 	
 	public void loop(String filename) {
 		logger.info("Beginning processing, filename is " +filename);
@@ -26,7 +26,7 @@ public class EnergyMonitor implements ProvidesDate {
 			logger.error("Unable to start listening", e);
 			return;
 		}
-		recorder = new SavesReadings(filename, this);
+		recorder = new SavesReadingsToCSV(filename, this);
 		
 		//
 		boolean running = true;
@@ -37,7 +37,7 @@ public class EnergyMonitor implements ProvidesDate {
 				message = receiver.receiveNextMessage();
 				if (message!=null) {
 					logger.info("Save message");
-					recorder.save(message);
+					recorder.record(message);
 				} else {
 					logger.info("Message ignored");
 				}

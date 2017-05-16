@@ -13,20 +13,21 @@ import org.slf4j.LoggerFactory;
 
 import tw.com.owllistener.ProvidesDate;
 
-public class SavesReadings {
-	private static final Logger logger = LoggerFactory.getLogger(SavesReadings.class);
+public class SavesReadingsToCSV implements RecordsReadings {
+	private static final Logger logger = LoggerFactory.getLogger(SavesReadingsToCSV.class);
 	private String filename;
 	private ProvidesDate provider;
 
-	public SavesReadings(String filename, ProvidesDate provider) {
+	public SavesReadingsToCSV(String filename, ProvidesDate provider) {
 		this.filename = filename;
 		this.provider = provider;
 	}
 
-	public void save(EnergyMessage message) throws IOException {
+	@Override
+	public void record(EnergyMessage message) throws IOException {
 		File file = new File(createFilename());
 
-		logger.info("Attempt to save received message to " + file.getAbsolutePath());
+		logger.info("Attempt to record received message to " + file.getAbsolutePath());
 		FileWriter appender = new FileWriter(file, true);
 		CSVPrinter printer = new CSVPrinter(appender , CSVFormat.DEFAULT);
 		
