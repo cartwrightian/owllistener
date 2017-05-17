@@ -12,24 +12,25 @@ public class SendDataToInitialState {
     private static final Logger logger = LoggerFactory.getLogger(SendDataToInitialState.class);
 
     private String accessKey;
-    private String bucket;
-    private String uri;
+    private String bucketKey;
+    private String baseURI;
 
-    public SendDataToInitialState(String uri, String accessKey, String bucket) {
-        this.uri = uri;
+    public SendDataToInitialState(String baseURI, String accessKey, String bucket) {
+        this.baseURI = baseURI;
         this.accessKey = accessKey;
-        this.bucket = bucket;
+        this.bucketKey = bucket;
     }
 
     public Response sendJson(String json) {
         Client client = ClientBuilder.newClient();
 
-        logger.info(String.format("Send json '%s' to uri %s", json,uri));
+        String uri = baseURI + "/api/events";
+        logger.info(String.format("Send json '%s' to baseURI %s", json, uri));
         WebTarget target = client.target(uri);
         Entity<?> entity = Entity.json(json);
         Invocation builder = target.request(MediaType.APPLICATION_JSON).
                 header("X-IS-AccessKey", accessKey).
-                header("X-IS-BucketKey", bucket).
+                header("X-IS-BucketKey", bucketKey).
                 header("Accept-Version", "~0").buildPost(entity);
 
         Response result = builder.invoke();
@@ -37,7 +38,22 @@ public class SendDataToInitialState {
         return result;
     }
 
-    public void createBucket() {
+    public Response createBucket() {
+        Client client = ClientBuilder.newClient();
+
+        String json = String.format("{ \"bucketKey\": \"%s\", \"bucketName\": \"%s\" }", bucketKey, "OWL Energy Reading");
+
+        String uri = baseURI + "/api/buckets";
+        logger.info(String.format("Send json '%s' to baseURI %s", json, uri));
+        WebTarget target = client.target(uri);
+        Entity<?> entity = Entity.json(json);
+        Invocation builder = target.request(MediaType.APPLICATION_JSON).
+                header("X-IS-AccessKey", accessKey).
+                header("Accept-Version", "~0").buildPost(entity);
+
+        Response result = builder.invoke();
+        client.close();
+        return result;
 
     }
 }

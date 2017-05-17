@@ -29,10 +29,12 @@ configurations {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5',
             'ch.qos.logback:logback-classic:1.0.10',
-            'org.apache.commons:commons-csv:1.1'
+            'org.apache.commons:commons-csv:1.1',
+            'org.glassfish.jersey.core:jersey-client:2.25.1'
 
     testCompile 'junit:junit:4.11',
-            'org.easymock:easymock:3.2'
+            'org.easymock:easymock:3.2',
+            'com.github.tomakehurst:wiremock:2.6.0'
 }
 
 sourceSets {

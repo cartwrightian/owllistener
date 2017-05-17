@@ -13,7 +13,6 @@ import java.io.IOException;
 public class InitialStateRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(InitialStateRecorder.class);
 
-
     private final SendDataToInitialState sender;
     private ProvidesDate dateProvider;
 
@@ -24,7 +23,16 @@ public class InitialStateRecorder implements RecordsReadings {
 
     @Override
     public void init() {
-        sender.createBucket();
+        Response response = sender.createBucket();
+        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+            if (response.getStatus()==201) {
+                logger.info("Bucket was created");
+            } else if (response.getStatus()==204) {
+                logger.info("Bucket existed");
+            }
+        } else {
+            logger.error("Failure create bucket" + response.getStatusInfo());
+        }
     }
 
     @Override

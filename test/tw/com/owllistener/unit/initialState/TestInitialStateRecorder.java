@@ -18,11 +18,29 @@ public class TestInitialStateRecorder extends EasyMockSupport {
 
     private SendDataToInitialState sender;
     private ProvidesDate providesDate;
+    private InitialStateRecorder recorder;
 
     @Before
     public void beforeEachTestRuns() {
         sender = createMock(SendDataToInitialState.class);
         providesDate = createMock(ProvidesDate.class);
+        recorder = new InitialStateRecorder(sender, providesDate);
+    }
+
+    @Test
+    public void testShouldRequestBucketCreationOnInit() {
+        EasyMock.expect(sender.createBucket()).andReturn(Response.status(201).build());
+        replayAll();
+        recorder.init();
+        verifyAll();
+    }
+
+    @Test
+    public void testShouldRequestBucketExistedOnInit() {
+        EasyMock.expect(sender.createBucket()).andReturn(Response.status(204).build());
+        replayAll();
+        recorder.init();
+        verifyAll();
     }
 
     @Test
@@ -42,7 +60,6 @@ public class TestInitialStateRecorder extends EasyMockSupport {
         EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Response.ok().build());
 
         replayAll();
-        InitialStateRecorder recorder = new InitialStateRecorder(sender, providesDate);
         recorder.record(message);
         verifyAll();
     }
