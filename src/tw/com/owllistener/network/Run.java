@@ -8,7 +8,13 @@ public class Run {
 	public static void main(String[] args) {
 		final Logger logger = LoggerFactory.getLogger(Run.class);
 		logger.info("Starting");
-		new EnergyMonitor().loop(args[0]);
+
+        ReceiveMessages receiver = new ReceiveMessages();
+        RecordsReadings recorder = new SavesReadingsToCSV(args[0], new CurrentTime());
+
+        new EnergyMonitor(receiver).loop(recorder);
 	}
+
+
 
 }

@@ -1,7 +1,6 @@
 package tw.com.owllistener.network;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -10,34 +9,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import tw.com.owllistener.ProvidesDate;
-
-public class EnergyMonitor implements ProvidesDate {
+public class EnergyMonitor  {
 	private static final Logger logger = LoggerFactory.getLogger(EnergyMonitor.class);
 	private ReceiveMessages receiver;
-	private RecordsReadings recorder;
-	
-	public void loop(String filename) {
-		logger.info("Beginning processing, filename is " +filename);
-		receiver = new ReceiveMessages();
+
+    public EnergyMonitor(ReceiveMessages receiver) {
+        this.receiver = receiver;
+    }
+
+    public void loop(RecordsReadings recorder) {
+		logger.info("Beginning processing");
 		try {
+		    recorder.init();
 			receiver.init();
 		} catch (IOException e) {
-			logger.error("Unable to start listening", e);
+			logger.error("Unable to start", e);
 			return;
 		}
-		recorder = new SavesReadingsToCSV(filename, this);
-		
-		//
+
 		boolean running = true;
 		while (running) {
 			EnergyMessage message;
 			try {
-				logger.info("Waiting for message");
+				logger.debug("Waiting for message");
 				message = receiver.receiveNextMessage();
 				if (message!=null) {
-					logger.info("Save message");
-					recorder.record(message);
+					logger.debug("Save message");
+					if (recorder.record(message)) {
+					    logger.info(String.format("Send message %s ok",message));
+                    } else {
+					    logger.error("Error recording message, stopping");
+					    running = false;
+                    }
 				} else {
 					logger.info("Message ignored");
 				}
@@ -51,9 +54,5 @@ public class EnergyMonitor implements ProvidesDate {
 		logger.warn("Stopped");
 	}
 
-	@Override
-	public Date getDate() {
-		return new Date();
-	}
 
 }

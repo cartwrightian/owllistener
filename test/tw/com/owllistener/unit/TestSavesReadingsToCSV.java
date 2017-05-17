@@ -1,4 +1,4 @@
-package tw.com.owllistener;
+package tw.com.owllistener.unit;
 
 import static org.junit.Assert.*;
 
@@ -19,11 +19,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import tw.com.owllistener.ProvidesDate;
 import tw.com.owllistener.network.EnergyMessage;
 import tw.com.owllistener.network.EnergyMessageChannel;
 import tw.com.owllistener.network.SavesReadingsToCSV;
 
-public class TestRecordsMessages implements ProvidesDate {
+public class TestSavesReadingsToCSV implements ProvidesDate {
 
 	private String filename;
 	private Path path;
@@ -47,6 +48,7 @@ public class TestRecordsMessages implements ProvidesDate {
 	@Test
 	public void shouldSaveMessageintoCsvFile() throws IOException, ParseException {
 		SavesReadingsToCSV recorder = new SavesReadingsToCSV(filename, this);
+		recorder.init();
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(10.999, 10009.1);
 		message.addChannel(channel);
@@ -79,6 +81,7 @@ public class TestRecordsMessages implements ProvidesDate {
 	@Test
 	public void shouldAppendintoCsvFile() throws IOException, ParseException {
 		SavesReadingsToCSV recorder = new SavesReadingsToCSV(filename,this);
+		recorder.init();
 		EnergyMessage message = new EnergyMessage("macid");
 		EnergyMessageChannel channel = new EnergyMessageChannel(99.999, 22009.1);
 		message.addChannel(channel);

@@ -38,4 +38,12 @@ public class EnergyMessage {
 		channels.add(channel);		
 	}
 
+	@Override
+	public String toString() {
+		return "EnergyMessage{" +
+				"channels=" + channels +
+				", id='" + id + '\'' +
+				", batteryLevel=" + batteryLevel +
+				'}';
+	}
 }
