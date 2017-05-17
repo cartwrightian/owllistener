@@ -42,8 +42,8 @@ public class TestEnergyMonitor extends EasyMockSupport {
         EasyMock.expect(recorder.record(messageB)).andReturn(false);
 
         replayAll();
-        EnergyMonitor energyMonitor = new EnergyMonitor(receiver);
-        energyMonitor.loop(recorder);
+        EnergyMonitor energyMonitor = new EnergyMonitor(receiver, recorder);
+        energyMonitor.loop();
         verifyAll();
     }
 }

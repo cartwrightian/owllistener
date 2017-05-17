@@ -12,7 +12,7 @@ public class Run {
         ReceiveMessages receiver = new ReceiveMessages();
         RecordsReadings recorder = new SavesReadingsToCSV(args[0], new CurrentTime());
 
-        new EnergyMonitor(receiver).loop(recorder);
+        new EnergyMonitor(receiver, recorder).loop();
 	}
 
 

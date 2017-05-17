@@ -12,14 +12,17 @@ import org.xml.sax.SAXException;
 public class EnergyMonitor  {
 	private static final Logger logger = LoggerFactory.getLogger(EnergyMonitor.class);
 	private ReceiveMessages receiver;
+    private RecordsReadings recorder;
 
-    public EnergyMonitor(ReceiveMessages receiver) {
+    public EnergyMonitor(ReceiveMessages receiver, RecordsReadings recorder) {
         this.receiver = receiver;
+        this.recorder = recorder;
     }
 
-    public void loop(RecordsReadings recorder) {
+    public void loop() {
 		logger.info("Beginning processing");
 		try {
+			// TODO check init start, push exception handling down on level
 		    recorder.init();
 			receiver.init();
 		} catch (IOException e) {
