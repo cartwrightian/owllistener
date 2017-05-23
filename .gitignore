@@ -1,6 +1,7 @@
 .gradle
 .idea
-.imp
+*.iml
 build
 out
 testoutput
+.DS_Store
