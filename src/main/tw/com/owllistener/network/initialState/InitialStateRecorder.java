@@ -8,7 +8,7 @@ import tw.com.owllistener.network.EnergyMessageChannel;
 import tw.com.owllistener.network.RecordsReadings;
 
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import java.time.Instant;
 
 public class InitialStateRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(InitialStateRecorder.class);
@@ -31,20 +31,20 @@ public class InitialStateRecorder implements RecordsReadings {
                 logger.info("Bucket existed");
             }
         } else {
-            logger.error("Failure create bucket" + response.getStatusInfo());
+            logger.error(String.format("Failure create bucket %s and %s ", response.getStatus(), response));
         }
     }
 
     @Override
     public boolean record(EnergyMessage message) {
-        long epoch = dateProvider.getDate().getTime();
+        Instant instance = dateProvider.getInstant();
 
         EnergyMessageChannel channel = message.getChannel(0);
 
-        String json = String.format("[ { \"epoch\": %s, " +
-                "\"key\": \"current\", \"value\": \"%s\"" +
-                "\"key\": \"today\", \"value\": \"%s\"" +
-                "}]", epoch, channel.getCurrent(), channel.getDayTotal());
+        long epoch = instance.getEpochSecond();
+        String current = formJason(epoch, "current", channel.getCurrent());
+        String today = formJason(epoch, "today", channel.getDayTotal());
+        String json = String.format("[ %s , %s ]", current, today);
 
         logger.info(String.format("Message: %s JSON: %s", message, json));
         Response response = sender.sendJson(json);
@@ -52,9 +52,13 @@ public class InitialStateRecorder implements RecordsReadings {
             logger.info("Sent event ok");
             return true;
         } else {
-            logger.error("Failure sending event " + response);
+            logger.error(String.format("Failure sending event %s and %s", response.getStatus(), response));
             // TODO need to implement retry strategy
             return false;
         }
+    }
+
+    private String formJason(long epoch, String key, Double value) {
+        return String.format("{ \"epoch\": %s, \"key\": \"%s\", \"value\": \"%s\"}", epoch, key, value);
     }
 }

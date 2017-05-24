@@ -2,7 +2,8 @@ package tw.com.owllistener.network;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tw.com.owllistener.network.initialState.ActualConfiguration;
+import tw.com.owllistener.network.configuration.ActualConfiguration;
+import tw.com.owllistener.network.configuration.ListenerConfiguration;
 import tw.com.owllistener.network.initialState.InitialStateRecorder;
 import tw.com.owllistener.network.initialState.SendDataToInitialState;
 

@@ -1,15 +1,11 @@
-package tw.com.owllistener.network.initialState;
+package tw.com.owllistener.network.configuration;
 
 import com.typesafe.config.Config;
-import tw.com.owllistener.network.ListenerConfiguration;
 import com.typesafe.config.ConfigFactory;
 
 public class ActualConfiguration implements ListenerConfiguration{
 
     private final Config conf;
-
-    private static final String OWL_MULTICAST_ADDRESS = "224.192.32.19";
-    //private static final int OWL_PORT = 22600;
 
     public ActualConfiguration() {
         conf = ConfigFactory.load();
@@ -18,26 +14,25 @@ public class ActualConfiguration implements ListenerConfiguration{
     @Override
     public int getOwlPort() {
         return conf.getInt("owlListener.owlUDPPort");
-        //return OWL_PORT;
     }
 
     @Override
     public String getOwlMulicastAddress() {
-        return OWL_MULTICAST_ADDRESS;
+        return conf.getString("owlListener.owlMulticastAddress");
     }
 
     @Override
     public String getInitialStateBaseURL() {
-        return "https://groker.initialstate.com/api/events";
+        return "https://groker.initialstate.com/";
     }
 
     @Override
     public String getInitialStateAccessKey() {
-        return "tbc";
+        return conf.getString("owlListener.accessKey");
     }
 
     @Override
     public String getInitialStateBucketKey() {
-        return "tbc";
+        return conf.getString("owlListener.bucketKey");
     }
 }

@@ -3,7 +3,7 @@ package tw.com.owllistener.network.initialState;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tw.com.owllistener.network.ListenerConfiguration;
+import tw.com.owllistener.network.configuration.ListenerConfiguration;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;

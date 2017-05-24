@@ -1,6 +1,6 @@
 package tw.com.owllistener;
 
-import tw.com.owllistener.network.ListenerConfiguration;
+import tw.com.owllistener.network.configuration.ListenerConfiguration;
 
 public class TestConfiguration implements ListenerConfiguration {
     private final String baseURI;

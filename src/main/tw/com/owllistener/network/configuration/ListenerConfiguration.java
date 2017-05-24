@@ -1,4 +1,4 @@
-package tw.com.owllistener.network;
+package tw.com.owllistener.network.configuration;
 
 public interface ListenerConfiguration {
     int getOwlPort();

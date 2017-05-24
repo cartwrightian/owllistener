@@ -1,9 +1,9 @@
 package tw.com.owllistener;
 
-import java.util.Date;
+import java.time.Instant;
 
 public interface ProvidesDate {
 
-	Date getDate();
+	Instant getInstant();
 
 }

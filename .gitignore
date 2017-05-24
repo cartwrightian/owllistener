@@ -5,3 +5,4 @@ build
 out
 testoutput
 .DS_Store
+.env

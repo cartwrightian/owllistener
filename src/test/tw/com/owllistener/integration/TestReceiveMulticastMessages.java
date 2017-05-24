@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import tw.com.owllistener.network.ListenerConfiguration;
+import tw.com.owllistener.network.configuration.ListenerConfiguration;
 import tw.com.owllistener.network.ReceiveMulticastMessages;
 import tw.com.owllistener.TestConfiguration;
 

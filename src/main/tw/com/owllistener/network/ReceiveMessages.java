@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
+import tw.com.owllistener.network.configuration.ListenerConfiguration;
 
 public class ReceiveMessages {
 	

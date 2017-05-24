@@ -12,7 +12,7 @@ import tw.com.owllistener.network.initialState.SendDataToInitialState;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 
 public class TestInitialStateRecorder extends EasyMockSupport {
 
@@ -45,17 +45,17 @@ public class TestInitialStateRecorder extends EasyMockSupport {
 
     @Test
     public void testShouldInvokeSenderWithCorrectJSON() throws IOException {
-        Date now = new Date();
+        Instant now = Instant.now();
 
         String expectedPayload = String.format("[ { \"epoch\": %s, " +
-                "\"key\": \"current\", \"value\": \"4.56\"" +
+                "\"key\": \"current\", \"value\": \"4.56\"} , { \"epoch\": %s, " +
                 "\"key\": \"today\", \"value\": \"12.8\"" +
-                "}]", now.getTime());
+                "} ]", now.getEpochSecond(), now.getEpochSecond());
 
         EnergyMessage message = new EnergyMessage("id");
         EnergyMessageChannel channel = new EnergyMessageChannel(4.56, 12.8);
         message.addChannel(channel);
-        EasyMock.expect(providesDate.getDate()).andReturn(now);
+        EasyMock.expect(providesDate.getInstant()).andReturn(now);
 
         EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Response.ok().build());
 

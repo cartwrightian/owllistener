@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -103,13 +103,8 @@ public class TestSavesReadingsToCSV implements ProvidesDate {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Date getDate() {
-		try {
-			return new SimpleDateFormat("dd-MM-yyyy").parse("30-11-1999");
-		} catch (ParseException e) {
-			// test will fail
-		}
-		return null;
+	public Instant getInstant() {
+		return Instant.parse("1999-11-30T10:15:30.00Z");
 	}
 
 }
