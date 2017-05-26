@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.xml.sax.SAXException;
 
 import tw.com.owllistener.TestConfiguration;
@@ -17,6 +18,7 @@ import tw.com.owllistener.network.ReceiveMessages;
 public class TestReceiveMessages {
 
 	@Test
+	@Category(IntegrationTest.class)
 	public void shouldReceiveAndParseMessage() throws IOException, XPathExpressionException, SAXException, ParserConfigurationException {
 		ReceiveMessages receiver = new ReceiveMessages(new TestConfiguration("url","bucketKey", "accessKey"));
 		

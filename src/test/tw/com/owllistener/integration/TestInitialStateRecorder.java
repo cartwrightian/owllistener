@@ -1,6 +1,7 @@
 package tw.com.owllistener.integration;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import tw.com.owllistener.network.CurrentTime;
 import tw.com.owllistener.network.EnergyMessage;
 import tw.com.owllistener.network.EnergyMessageChannel;
@@ -13,6 +14,7 @@ import static junit.framework.TestCase.assertTrue;
 public class TestInitialStateRecorder {
 
     @Test
+    @Category(IntegrationTest.class)
     public void shouldSendTestDataToInitialState() {
         SendDataToInitialState sender = new SendDataToInitialState(new ActualConfiguration());
         InitialStateRecorder recorder = new InitialStateRecorder(sender, new CurrentTime());

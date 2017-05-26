@@ -9,15 +9,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'org.ajoberstar:gradle-git:1.2.0'
-  }
-}
-
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'application'
@@ -51,6 +42,18 @@ sourceSets {
 
 sourceSets.all {
     compileClasspath += configurations.compileOnly
+}
+
+test {
+    useJUnit {
+        excludeCategories 'tw.com.owllistener.integration.IntegrationTest'
+    }
+}
+
+task integration(type: Test) {
+    useJUnit {
+        includeCategories 'tw.com.owllistener.integration.IntegrationTest'
+    }
 }
 
 
