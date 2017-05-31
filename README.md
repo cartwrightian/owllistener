@@ -1,6 +1,11 @@
 # owllistener
 Listen for multicast packets from owl network energy monitor and send to initialstate
 
+#Build
+>gradle gradle debianPackage
+
+Copy resulting package from build/distributions/owllistener_0.1-1_all.deb to your target machine
+
 #Example install
 >sudo dpkg -i owllistener_0.1-1_all.deb
 
