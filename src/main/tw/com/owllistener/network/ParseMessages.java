@@ -2,6 +2,7 @@ package tw.com.owllistener.network;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +32,7 @@ public class ParseMessages {
 
 	
 
-	public EnergyMessage parse(String xml) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+	public Optional<EnergyMessage> parse(String xml) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		InputSource source = new InputSource(new StringReader(xml));
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -44,7 +45,7 @@ public class ParseMessages {
 		
 		if (!"electricity".equals(nodeName)) {
 			logger.info("Ignoring none electricity message of type " + nodeName);
-			return null;
+			return Optional.empty();
 		}
 		
 		String id = xpath.evaluate("/electricity/@id", document);
@@ -66,7 +67,7 @@ public class ParseMessages {
 			message.addChannel(channel);
 		}
 		
-		return message;
+		return Optional.of(message);
 	}
 
 	private EnergyMessageChannel parseChannel(Node item) throws XPathExpressionException {

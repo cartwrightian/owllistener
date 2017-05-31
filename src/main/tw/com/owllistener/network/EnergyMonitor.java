@@ -1,6 +1,7 @@
 package tw.com.owllistener.network;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -32,27 +33,17 @@ public class EnergyMonitor  {
 
 		boolean running = true;
 		while (running) {
-			EnergyMessage message;
-			try {
-				logger.debug("Waiting for message");
-				message = receiver.receiveNextMessage();
-				if (message!=null) {
-					logger.debug("Save message");
-					if (recorder.record(message)) {
-					    logger.info(String.format("Send message %s ok",message));
-                    } else {
-					    logger.error("Error recording message, stopping");
-					    running = false;
-                    }
+            Optional<EnergyMessage> possible = receiver.receiveNextMessage();
+			if (possible.isPresent()) {
+				logger.debug("Record energy message");
+                EnergyMessage message = possible.get();
+                if (recorder.record(message)) {
+					logger.info(String.format("Send possible %s ok", message));
 				} else {
-					logger.info("Message ignored");
+					logger.error("Error recording possible, stopping");
+					running = false;
 				}
-			} catch (XPathExpressionException | SAXException
-					| ParserConfigurationException | IOException e) {
-				logger.error("Caught exception ",e);
-				logger.error("Will stop");
-				running = false;
-			} 
+			}
 		}
 		logger.warn("Stopped");
 	}

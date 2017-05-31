@@ -3,6 +3,7 @@ package tw.com.owllistener.integration;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -23,7 +24,8 @@ public class TestReceiveMessages {
 		ReceiveMessages receiver = new ReceiveMessages(new TestConfiguration("url","bucketKey", "accessKey"));
 		
 		receiver.init();
-		EnergyMessage message = receiver.receiveNextMessage();
+		Optional<EnergyMessage> possible = receiver.receiveNextMessage();
+		EnergyMessage message = possible.get();
 		assertEquals(3, message.getNumChannels());
 		assertNotEquals(new Double(0), message.getChannel(0).getCurrent());
 		assertNotEquals(new Double(0), message.getChannel(0).getDayTotal());

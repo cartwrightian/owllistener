@@ -3,6 +3,7 @@ package tw.com.owllistener.unit;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -29,7 +30,9 @@ public class TestParsingOfMessages {
 	public void shouldParseXmlEnergyMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		ParseMessages parser = new ParseMessages();
 		
-		EnergyMessage message = parser.parse(example);
+		Optional<EnergyMessage> possible = parser.parse(example);
+		EnergyMessage message = possible.get();
+
 		assertEquals("4437190010E7", message.getUnitMac());
 
 		assertEquals(new Integer(10), message.batteryLevel());
@@ -42,9 +45,9 @@ public class TestParsingOfMessages {
 	@Test
 	public void shouldParseXmlWeatherMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		ParseMessages parser = new ParseMessages();
-		
-		EnergyMessage message = parser.parse(exampleWeather);
-		assertNull(message);
+
+		Optional<EnergyMessage> message = parser.parse(exampleWeather);
+		assertFalse(message.isPresent());
 		
 	}
 
