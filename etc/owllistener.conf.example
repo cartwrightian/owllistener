@@ -1,0 +1,6 @@
+
+# copy to /etc/default/owllistener
+
+export BUCKET_KEY=yourInitialStateBucketKey
+
+export ACCESS_KEY=yourInitialStateAccessKey

@@ -1,18 +1,25 @@
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-ospackage-plugin:4.4.0'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
+apply plugin: 'maven'
+apply plugin: 'nebula.deb'
 
 mainClassName = 'tw.com.owllistener.network.Run'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'application'
-apply plugin: 'idea'
 
 repositories {
     mavenCentral()
@@ -55,5 +62,49 @@ task integration(type: Test) {
         includeCategories 'tw.com.owllistener.integration.IntegrationTest'
     }
 }
+
+jar {
+    manifest {
+        attributes(
+                "Manifest-Version": "1.0",
+                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "Main-Class": mainClassName
+        )
+    }
+}
+
+task debianPackage(type: Deb) {
+    packageName = 'owllistener'
+    release = 1
+    version = '0.1'
+    os = LINUX
+
+    configurationFile('/etc/defaults/owllistener')
+
+    requires('openjdk-8-jre-headless')
+
+    into '/opt/owllistener'
+    from(configurations.runtime) {
+        into 'lib'
+    }
+    from(jar.outputs.files) {
+        into 'lib'
+    }
+    from('src/main/resources') {
+        into 'conf'
+    }
+    from('scripts') {
+        into 'bin'
+        fileMode 0755
+    }
+    from('etc') {
+        into 'etc'
+    }
+    link('/etc/init.d/owllistener', '/opt/owllistener/bin/owllistener.sh')
+
+}
+debianPackage.dependsOn assembleDist
+
+
 
 

@@ -13,15 +13,15 @@
     </encoder>
 
      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-       <level>WARN</level>
+       <level>INFO</level>
      </filter>
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>owllistener.log</file>
+    <file>/var/log/owllistener.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- daily rollover -->
-      <fileNamePattern>owllistener.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>/var/log/owllistener.%d{yyyy-MM-dd}.log</fileNamePattern>
 
       <maxHistory>30</maxHistory>
       <totalSizeCap>1GB</totalSizeCap>
