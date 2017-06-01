@@ -1,6 +1,5 @@
 package tw.com.owllistener.unit.initialState;
 
-import com.google.common.collect.Lists;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -10,8 +9,6 @@ import tw.com.owllistener.network.RecordsReadings;
 import tw.com.owllistener.network.initialState.BufferingRecorder;
 import tw.com.owllistener.network.initialState.MarshalToJson;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Queue;
 
 import static tw.com.owllistener.QueueHelper.asQueue;

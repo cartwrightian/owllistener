@@ -59,7 +59,6 @@ public class InitialStateRecorder implements RecordsReadings {
                 return true;
             } else {
                 logger.error(format("Failure sending event %s and %s", response.getStatus(), response));
-                // TODO need to implement retry strategy
                 return false;
             }
         } else {
