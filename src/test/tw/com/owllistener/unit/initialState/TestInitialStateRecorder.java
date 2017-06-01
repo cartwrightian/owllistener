@@ -13,6 +13,7 @@ import tw.com.owllistener.network.initialState.SendDataToInitialState;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Optional;
 
 public class TestInitialStateRecorder extends EasyMockSupport {
 
@@ -29,7 +30,7 @@ public class TestInitialStateRecorder extends EasyMockSupport {
 
     @Test
     public void testShouldRequestBucketCreationOnInit() {
-        EasyMock.expect(sender.createBucket()).andReturn(Response.status(201).build());
+        EasyMock.expect(sender.createBucket()).andReturn(Optional.of(Response.status(201).build()));
         replayAll();
         recorder.init();
         verifyAll();
@@ -37,7 +38,7 @@ public class TestInitialStateRecorder extends EasyMockSupport {
 
     @Test
     public void testShouldRequestBucketExistedOnInit() {
-        EasyMock.expect(sender.createBucket()).andReturn(Response.status(204).build());
+        EasyMock.expect(sender.createBucket()).andReturn(Optional.of(Response.status(204).build()));
         replayAll();
         recorder.init();
         verifyAll();
@@ -57,7 +58,7 @@ public class TestInitialStateRecorder extends EasyMockSupport {
         message.addChannel(channel);
         EasyMock.expect(providesDate.getInstant()).andReturn(now);
 
-        EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Response.ok().build());
+        EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Optional.of(Response.ok().build()));
 
         replayAll();
         recorder.record(message);

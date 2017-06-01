@@ -9,6 +9,7 @@ import tw.com.owllistener.network.RecordsReadings;
 
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.Optional;
 
 public class InitialStateRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(InitialStateRecorder.class);
@@ -23,15 +24,23 @@ public class InitialStateRecorder implements RecordsReadings {
 
     @Override
     public void init() {
-        Response response = sender.createBucket();
-        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-            if (response.getStatus()==201) {
-                logger.info("Bucket was created");
-            } else if (response.getStatus()==204) {
-                logger.info("Bucket existed");
+        Optional<Response> optional = sender.createBucket();
+        if (optional.isPresent()) {
+            Response response = optional.get();
+            int status = response.getStatus();
+            if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+                if (status == 201) {
+                    logger.info("Bucket was created");
+                } else if (status == 204) {
+                    logger.info("Bucket existed");
+                } else {
+                    logger.warn("Successful but unexpected status for Bucket creation " + status);
+                }
+            } else {
+                logger.error(String.format("Failure create bucket %s and %s ", status, response));
             }
         } else {
-            logger.error(String.format("Failure create bucket %s and %s ", response.getStatus(), response));
+            logger.warn("Unable to make create bucket call during init");
         }
     }
 
@@ -47,13 +56,20 @@ public class InitialStateRecorder implements RecordsReadings {
         String json = String.format("[ %s , %s ]", current, today);
 
         logger.info(String.format("Message: %s JSON: %s", message, json));
-        Response response = sender.sendJson(json);
-        if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-            logger.info("Sent event ok");
-            return true;
+
+        Optional<Response> optional = sender.sendJson(json);
+        if (optional.isPresent()) {
+            Response response = optional.get();
+            if (response.getStatusInfo().getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+                logger.info("Sent event ok");
+                return true;
+            } else {
+                logger.error(String.format("Failure sending event %s and %s", response.getStatus(), response));
+                // TODO need to implement retry strategy
+                return false;
+            }
         } else {
-            logger.error(String.format("Failure sending event %s and %s", response.getStatus(), response));
-            // TODO need to implement retry strategy
+            logger.warn("Unable to send energy message to initial state");
             return false;
         }
     }
