@@ -53,11 +53,14 @@ public class EnergyMessage implements MarshalToJson {
     }
 
     @Override
-	public String toJson() {
+	public List<String> toJson() {
 		EnergyMessageChannel channel = getChannel(0);
+		List<String> readings = new LinkedList<>();
 		String current = formJason("current", channel.getCurrent());
 		String today = formJason("today", channel.getDayTotal());
-		return String.format("[ %s , %s ]", current, today);
+		readings.add(current);
+		readings.add(today);
+		return readings;
 	}
 
 	private String formJason(String key, Double value) {

@@ -9,7 +9,10 @@ import tw.com.owllistener.network.RecordsReadings;
 
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+
+import static java.lang.String.format;
 
 public class InitialStateRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(InitialStateRecorder.class);
@@ -35,7 +38,7 @@ public class InitialStateRecorder implements RecordsReadings {
                     logger.warn("Successful but unexpected status for Bucket creation " + status);
                 }
             } else {
-                logger.error(String.format("Failure create bucket %s and %s ", status, response));
+                logger.error(format("Failure create bucket %s and %s ", status, response));
             }
         } else {
             logger.warn("Unable to make create bucket call during init");
@@ -44,8 +47,8 @@ public class InitialStateRecorder implements RecordsReadings {
 
     @Override
     public boolean record(MarshalToJson message) {
-        String json = message.toJson();
-        logger.info(String.format("Message: %s JSON: %s", message, json));
+        String json = formJsonArray(message.toJson());
+        logger.info(format("Message: %s JSON: %s", message, json));
 
         Optional<Response> optional = sender.sendJson(json);
         if (optional.isPresent()) {
@@ -54,7 +57,7 @@ public class InitialStateRecorder implements RecordsReadings {
                 logger.info("Sent event ok");
                 return true;
             } else {
-                logger.error(String.format("Failure sending event %s and %s", response.getStatus(), response));
+                logger.error(format("Failure sending event %s and %s", response.getStatus(), response));
                 // TODO need to implement retry strategy
                 return false;
             }
@@ -62,6 +65,18 @@ public class InitialStateRecorder implements RecordsReadings {
             logger.warn("Unable to send energy message to initial state");
             return false;
         }
+    }
+
+    private String formJsonArray(List<String> elements) {
+        StringBuilder builder = new StringBuilder();
+        elements.forEach(part -> {
+            if (builder.length()>0) {
+                builder.append(",");
+            }
+            builder.append(format(" %s ", part));
+        });
+        return format("[%s]", builder.toString());
+
     }
 
 }
