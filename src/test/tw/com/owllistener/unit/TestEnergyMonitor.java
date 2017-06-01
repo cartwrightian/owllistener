@@ -16,6 +16,8 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Optional;
 
+import static tw.com.owllistener.QueueHelper.asQueue;
+
 public class TestEnergyMonitor extends EasyMockSupport {
 
     private RecordsReadings recorder;
@@ -39,9 +41,9 @@ public class TestEnergyMonitor extends EasyMockSupport {
         EasyMock.expectLastCall();
 
         EasyMock.expect(receiver.receiveNextMessage()).andReturn(Optional.of(messageA));
-        EasyMock.expect(recorder.record(messageA)).andReturn(true);
+        EasyMock.expect(recorder.record(asQueue(messageA))).andReturn(true);
         EasyMock.expect(receiver.receiveNextMessage()).andReturn(Optional.of(messageB));
-        EasyMock.expect(recorder.record(messageB)).andReturn(false);
+        EasyMock.expect(recorder.record(asQueue(messageB))).andReturn(false);
 
         replayAll();
         EnergyMonitor energyMonitor = new EnergyMonitor(receiver, recorder);

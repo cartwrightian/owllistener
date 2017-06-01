@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tw.com.owllistener.network.configuration.ActualConfiguration;
 import tw.com.owllistener.network.configuration.ListenerConfiguration;
+import tw.com.owllistener.network.initialState.BufferingRecorder;
 import tw.com.owllistener.network.initialState.InitialStateRecorder;
 import tw.com.owllistener.network.initialState.SendDataToInitialState;
 
@@ -18,8 +19,9 @@ public class Run {
 		ReceiveMessages receiver = new ReceiveMessages(configuration,  new CurrentTime());
         SendDataToInitialState sender = new SendDataToInitialState(configuration);
         RecordsReadings recorder = new InitialStateRecorder(sender);
+        RecordsReadings bufferedRecorder = new BufferingRecorder(recorder);
 
-        new EnergyMonitor(receiver, recorder).loop();
+        new EnergyMonitor(receiver, bufferedRecorder).loop();
 	}
 
 

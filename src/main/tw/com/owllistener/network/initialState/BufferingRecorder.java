@@ -10,36 +10,34 @@ import java.util.Queue;
 public class BufferingRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(RecordsReadings.class);
 
-    private final RecordsReadings contains;
-    private final Queue<MarshalToJson> queue;
+    private final RecordsReadings sender;
+    private final Queue<MarshalToJson> buffer;
 
-    public BufferingRecorder(RecordsReadings contains) {
-        this.contains = contains;
-        queue = new LinkedList<>();
+    public BufferingRecorder(RecordsReadings sender) {
+        this.sender = sender;
+        buffer = new LinkedList<>();
     }
 
     @Override
     public void init() {
-        contains.init();
+        sender.init();
     }
 
     @Override
-    public boolean record(MarshalToJson message) {
-        while(!queue.isEmpty()) {
-            MarshalToJson candidate = queue.peek();
-            if (contains.record(candidate)) {
-                queue.remove();
+    public boolean record(Queue<MarshalToJson> messages) {
+        if (!buffer.isEmpty()) {
+            if (sender.record(buffer)) {
+                buffer.clear();
             } else {
-                queue.add(message);
-                break;
+                buffer.addAll(messages);
             }
         }
 
-        if (queue.isEmpty()) {
-            if (contains.record(message)) {
-                logger.debug("Send message ok");
+        if (buffer.isEmpty()) {
+            if (sender.record(messages)) {
+                logger.debug("Send messages ok");
             } else {
-                queue.add(message);
+                buffer.addAll(messages);
             }
         }
 

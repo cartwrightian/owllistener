@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 
 import static java.lang.String.format;
 
@@ -46,9 +47,9 @@ public class InitialStateRecorder implements RecordsReadings {
     }
 
     @Override
-    public boolean record(MarshalToJson message) {
-        String json = formJsonArray(message.toJson());
-        logger.info(format("Message: %s JSON: %s", message, json));
+    public boolean record(Queue<MarshalToJson> queue) {
+        String json = formJsonArray(queue);
+        logger.info(format("Message queue size: %s JSON: %s", queue.size(), json));
 
         Optional<Response> optional = sender.sendJson(json);
         if (optional.isPresent()) {
@@ -67,16 +68,20 @@ public class InitialStateRecorder implements RecordsReadings {
         }
     }
 
-    private String formJsonArray(List<String> elements) {
+    private String formJsonArray(Queue<MarshalToJson> queue) {
         StringBuilder builder = new StringBuilder();
-        elements.forEach(part -> {
-            if (builder.length()>0) {
-                builder.append(",");
-            }
-            builder.append(format(" %s ", part));
-        });
-        return format("[%s]", builder.toString());
 
+        while (!queue.isEmpty()) {
+            List<String> elements = queue.remove().toJson();
+            elements.forEach(part -> {
+                if (builder.length()>0) {
+                    builder.append(",");
+                }
+                builder.append(format(" %s ", part));
+            });
+
+        }
+        return format("[%s]", builder.toString());
     }
 
 }
