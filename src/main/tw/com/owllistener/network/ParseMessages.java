@@ -2,6 +2,7 @@ package tw.com.owllistener.network;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.time.Instant;
 import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,18 +20,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import tw.com.owllistener.ProvidesDate;
 
 public class ParseMessages {
 	private static final Logger logger = LoggerFactory.getLogger(ParseMessages.class);
 	private DocumentBuilderFactory dbf;
 	private XPathFactory xpathFactory;
-	
-	public ParseMessages() {
-		dbf = DocumentBuilderFactory.newInstance();
+    private ProvidesDate providesDate;
+
+    public ParseMessages(ProvidesDate providesDate) {
+        this.providesDate = providesDate;
+        dbf = DocumentBuilderFactory.newInstance();
 		xpathFactory = XPathFactory.newInstance();
 	}
-
-	
 
 	public Optional<EnergyMessage> parse(String xml) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		InputSource source = new InputSource(new StringReader(xml));
@@ -50,7 +52,9 @@ public class ParseMessages {
 		
 		String id = xpath.evaluate("/electricity/@id", document);
 		logger.debug("id is: " +id);
-		EnergyMessage message = new EnergyMessage(id);
+		Instant instance = providesDate.getInstant();
+
+		EnergyMessage message = new EnergyMessage(id, instance.getEpochSecond());
 		
 		String battery = xpath.evaluate("/electricity/battery/@level", document);
 		logger.debug("battery level is: " +battery);

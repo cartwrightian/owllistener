@@ -11,6 +11,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import tw.com.owllistener.network.CurrentTime;
 import tw.com.owllistener.network.EnergyMessage;
 import tw.com.owllistener.network.EnergyMessageChannel;
 import tw.com.owllistener.network.ParseMessages;
@@ -28,7 +29,7 @@ public class TestParsingOfMessages {
 
 	@Test
 	public void shouldParseXmlEnergyMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-		ParseMessages parser = new ParseMessages();
+		ParseMessages parser = new ParseMessages(new CurrentTime());
 		
 		Optional<EnergyMessage> possible = parser.parse(example);
 		EnergyMessage message = possible.get();
@@ -44,7 +45,7 @@ public class TestParsingOfMessages {
 	
 	@Test
 	public void shouldParseXmlWeatherMessage() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-		ParseMessages parser = new ParseMessages();
+		ParseMessages parser = new ParseMessages(new CurrentTime());
 
 		Optional<EnergyMessage> message = parser.parse(exampleWeather);
 		assertFalse(message.isPresent());

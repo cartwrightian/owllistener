@@ -29,8 +29,9 @@ public class TestEnergyMonitor extends EasyMockSupport {
 
     @Test
     public void shouldRecordMessageAndStopIfRequested() throws SAXException, ParserConfigurationException, XPathExpressionException, IOException {
-        EnergyMessage messageA = new EnergyMessage("idA");
-        EnergyMessage messageB = new EnergyMessage("idB");
+
+        EnergyMessage messageA = new EnergyMessage("idA", 1223);
+        EnergyMessage messageB = new EnergyMessage("idB", 1224);
 
         recorder.init();
         EasyMock.expectLastCall();

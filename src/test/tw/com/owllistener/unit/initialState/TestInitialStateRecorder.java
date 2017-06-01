@@ -15,21 +15,22 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class TestInitialStateRecorder extends EasyMockSupport {
 
     private SendDataToInitialState sender;
-    private ProvidesDate providesDate;
     private InitialStateRecorder recorder;
 
     @Before
     public void beforeEachTestRuns() {
         sender = createMock(SendDataToInitialState.class);
-        providesDate = createMock(ProvidesDate.class);
-        recorder = new InitialStateRecorder(sender, providesDate);
+        recorder = new InitialStateRecorder(sender);
     }
 
     @Test
-    public void testShouldRequestBucketCreationOnInit() {
+    public void shouldRequestBucketCreationOnInit() {
         EasyMock.expect(sender.createBucket()).andReturn(Optional.of(Response.status(201).build()));
         replayAll();
         recorder.init();
@@ -37,11 +38,32 @@ public class TestInitialStateRecorder extends EasyMockSupport {
     }
 
     @Test
-    public void testShouldRequestBucketExistedOnInit() {
+    public void shouldRequestBucketExistedOnInit() {
         EasyMock.expect(sender.createBucket()).andReturn(Optional.of(Response.status(204).build()));
         replayAll();
         recorder.init();
         verifyAll();
+    }
+
+    @Test
+    public void shouldReturnFalseIfConnectionIssue() {
+        Instant now = Instant.now();
+
+        String expectedPayload = String.format("[ { \"epoch\": %s, " +
+                "\"key\": \"current\", \"value\": \"4.56\"} , { \"epoch\": %s, " +
+                "\"key\": \"today\", \"value\": \"12.8\"" +
+                "} ]", now.getEpochSecond(), now.getEpochSecond());
+
+        EnergyMessage message = new EnergyMessage("id", now.getEpochSecond());
+        EnergyMessageChannel channel = new EnergyMessageChannel(4.56, 12.8);
+        message.addChannel(channel);
+
+        EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Optional.empty());
+
+        replayAll();
+        boolean result = recorder.record(message);
+        verifyAll();
+        assertFalse(result);
     }
 
     @Test
@@ -53,15 +75,15 @@ public class TestInitialStateRecorder extends EasyMockSupport {
                 "\"key\": \"today\", \"value\": \"12.8\"" +
                 "} ]", now.getEpochSecond(), now.getEpochSecond());
 
-        EnergyMessage message = new EnergyMessage("id");
+        EnergyMessage message = new EnergyMessage("id", now.getEpochSecond());
         EnergyMessageChannel channel = new EnergyMessageChannel(4.56, 12.8);
         message.addChannel(channel);
-        EasyMock.expect(providesDate.getInstant()).andReturn(now);
 
         EasyMock.expect(sender.sendJson(expectedPayload)).andReturn(Optional.of(Response.ok().build()));
 
         replayAll();
-        recorder.record(message);
+        boolean result = recorder.record(message);
         verifyAll();
+        assertTrue(result);
     }
 }

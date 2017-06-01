@@ -9,6 +9,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import tw.com.owllistener.ProvidesDate;
 import tw.com.owllistener.network.configuration.ListenerConfiguration;
 
 public class ReceiveMessages {
@@ -17,9 +18,9 @@ public class ReceiveMessages {
 	private ReceiveMulticastMessages multicastReceiver;
 	private ParseMessages parser;
 
-	public ReceiveMessages(ListenerConfiguration configuration) {
+	public ReceiveMessages(ListenerConfiguration configuration, ProvidesDate providesDate) {
 		multicastReceiver = new ReceiveMulticastMessages(configuration);
-		parser = new ParseMessages();
+		parser = new ParseMessages(providesDate);
 	}
 
 	public void init() throws IOException {

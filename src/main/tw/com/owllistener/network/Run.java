@@ -15,9 +15,9 @@ public class Run {
 
 		ListenerConfiguration configuration = new ActualConfiguration();
 
-		ReceiveMessages receiver = new ReceiveMessages(configuration);
+		ReceiveMessages receiver = new ReceiveMessages(configuration,  new CurrentTime());
         SendDataToInitialState sender = new SendDataToInitialState(configuration);
-        RecordsReadings recorder = new InitialStateRecorder(sender, new CurrentTime());
+        RecordsReadings recorder = new InitialStateRecorder(sender);
 
         new EnergyMonitor(receiver, recorder).loop();
 	}

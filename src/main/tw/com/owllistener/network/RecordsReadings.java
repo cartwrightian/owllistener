@@ -1,6 +1,8 @@
 package tw.com.owllistener.network;
 
+import tw.com.owllistener.network.initialState.MarshalToJson;
+
 public interface RecordsReadings {
     void init();
-    boolean record(EnergyMessage message);
+    boolean record(MarshalToJson message);
 }

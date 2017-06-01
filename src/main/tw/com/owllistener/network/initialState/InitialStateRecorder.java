@@ -15,11 +15,9 @@ public class InitialStateRecorder implements RecordsReadings {
     private static final Logger logger = LoggerFactory.getLogger(InitialStateRecorder.class);
 
     private final SendDataToInitialState sender;
-    private ProvidesDate dateProvider;
 
-    public InitialStateRecorder(SendDataToInitialState sender, ProvidesDate dateProvider) {
+    public InitialStateRecorder(SendDataToInitialState sender) {
         this.sender = sender;
-        this.dateProvider = dateProvider;
     }
 
     @Override
@@ -45,16 +43,8 @@ public class InitialStateRecorder implements RecordsReadings {
     }
 
     @Override
-    public boolean record(EnergyMessage message) {
-        Instant instance = dateProvider.getInstant();
-
-        EnergyMessageChannel channel = message.getChannel(0);
-
-        long epoch = instance.getEpochSecond();
-        String current = formJason(epoch, "current", channel.getCurrent());
-        String today = formJason(epoch, "today", channel.getDayTotal());
-        String json = String.format("[ %s , %s ]", current, today);
-
+    public boolean record(MarshalToJson message) {
+        String json = message.toJson();
         logger.info(String.format("Message: %s JSON: %s", message, json));
 
         Optional<Response> optional = sender.sendJson(json);
@@ -74,7 +64,4 @@ public class InitialStateRecorder implements RecordsReadings {
         }
     }
 
-    private String formJason(long epoch, String key, Double value) {
-        return String.format("{ \"epoch\": %s, \"key\": \"%s\", \"value\": \"%s\"}", epoch, key, value);
-    }
 }

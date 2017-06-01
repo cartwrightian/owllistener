@@ -69,11 +69,21 @@ public class TestSendDataToInitialState {
     }
 
     @Test
-    public void shouldHandleServerError() {
+    public void shouldHandleServerErrorNoSuchServer() {
         TestConfiguration badConfig = new TestConfiguration("http://no.such.server:8089", BUCKET_KEY, ACCESS_KEY);
         SendDataToInitialState noSuchServer = new SendDataToInitialState(badConfig);
 
         Optional<Response> response = noSuchServer.sendJson("payload");
+
+        assertFalse(response.isPresent());
+    }
+
+    @Test
+    public void shouldHandleServerErrorConnectioinRefused() {
+        TestConfiguration badConfig = new TestConfiguration("http://localhost:8090", BUCKET_KEY, ACCESS_KEY);
+        SendDataToInitialState connectionRefused = new SendDataToInitialState(badConfig);
+
+        Optional<Response> response = connectionRefused.sendJson("payload");
 
         assertFalse(response.isPresent());
     }

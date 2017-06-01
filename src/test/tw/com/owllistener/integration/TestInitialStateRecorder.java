@@ -9,6 +9,8 @@ import tw.com.owllistener.network.configuration.ActualConfiguration;
 import tw.com.owllistener.network.initialState.InitialStateRecorder;
 import tw.com.owllistener.network.initialState.SendDataToInitialState;
 
+import java.time.Instant;
+
 import static junit.framework.TestCase.assertTrue;
 
 public class TestInitialStateRecorder {
@@ -17,9 +19,9 @@ public class TestInitialStateRecorder {
     @Category(IntegrationTest.class)
     public void shouldSendTestDataToInitialState() {
         SendDataToInitialState sender = new SendDataToInitialState(new ActualConfiguration());
-        InitialStateRecorder recorder = new InitialStateRecorder(sender, new CurrentTime());
+        InitialStateRecorder recorder = new InitialStateRecorder(sender);
         recorder.init();
-        EnergyMessage message = new EnergyMessage("msgId");
+        EnergyMessage message = new EnergyMessage("msgId", Instant.now().getEpochSecond() );
         message.addChannel(new EnergyMessageChannel(42.42, 1022.22));
         assertTrue(recorder.record(message));
     }
