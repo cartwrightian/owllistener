@@ -1,24 +1,27 @@
 language: java
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
 jdk:
-  - oraclejdk8
+- oraclejdk8
 sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+    - oracle-java8-installer
+before_deploy:
+  - ./gradlew debianPackage
 deploy:
   provider: releases
   api_key:
-    secure: AaR+lAisPy2k7CbVH0KFq5GLuUntcl9YJmqfqewXHX2i5xxBoMNxXpf3KZLj5Oss8/23e0GJusRY3WCiXg/InKdN4cafPeBl+6la11lXCLVuDYvXXuD7jTjVysxOgxj192f4KTc9T+fYFY4ASNQIUgT7j+xLgMONyOR1DVhLRzkSM+jJEHYf/AjclilkOiwzq/hlSpAsmXVTX3bIccAwdW1w019SfboYrKFrwp2pCIA5eA8qgpxv9bmDuQspmTTTS/8BDBdEnpTdvY+D/6i8I/GOk9EpZmxKFmN3VuYE+gRGOmkDwK3GK0DDWGrzPoElDLFycc5d3dGR2e5V1gUV9gRj8/g8ujw7cuIUKboBhSz3C/VK1MCjh5EnfUoTUErTzcfB84e1os43vFdB4xOblz0rXGAexBIFLFqzSf+OJ08DagBz13UO1tAlugVT9X3JNv9x+OWYEqAc8pB+j2RynUrQQ6JpURz6LoPiEk/NphaXy+Gwszn5w6FCe0KhFPirulxorxC0Gty4e79t4jxHkkvPkmcj/aOIEz7y7Q4mutBmRthzr5wESOBFFESDj4O7Jp0YcPB37VH2sgKsAur8MKoTePhshWyIQk9a/N4AhCxIV0PxDRw9yhbBflcLQvYOkVrb1EGWLak/3AW8OG9+XQvN9T3w/21BE2wVWhNGf1s=
+    secure: CJX6HF9NYb5qLuANuQq7r91jLEfIHhWDG2wE5h4JpMM/mzNQ4h9Y2zopD+a5iQgg/lEs/Hhp74+NaGfpEazKflXnilkgpa6wUB9azR5d5cZtckXHXDH2anEobmRWi9hyBcEUpN7+DazWWV6dvzP8ycqr56SW2iYK+Oe82BAZ9/ytuHX5bvuZhkMNGLSVaQGrAZbSnA6dOh9H/LXloecNENvRFWz2BkKLpqyVDA6Ssqp6zj8HElePaiLtjeIN0qqHBO5fuacPFUijoHNF4L0HM4UzAgIWVY6OqJ4Z7QlGZUi90QMGTKJP6LJ/MHyrzA0Jhd6AyTfJGdgH/rfvSIzxHgq0hMUTfkwk1KQOsu85kL0i5uS4hwy7+rIkVbEBGCx8nsI8vNGHB7tB9Ik2Gtjb9eS4LGuY/RtXg3mTYLulDIwGGpafbBG3S1k7fZU3Nz2s9Sc4krLw6e3NTIeCgh0GdTgev2KZ7pGFU5hHRcxtqEsM2/mX7KSJWzJDyB1vQyj+mEXAA/27jv2kfTd9G64sLKXKPNBvOtLU6CuOZrYaVajz0t+595iDy5qCydFFwZ571lGzAM6fJ7ZeOIPassPddTWklr18ZwXwTH1prDlX6OCSGrnSPOfoRL1wBoJz5Pra7pUgu6xkW+xk5Chc2pulsfLDHJvzbNgMrBKj6gWd/Sc=
   file: build/distributions/owllistener_0.1-${TRAVIS_BUILD_NUMBER}_all.deb
   on:
     repo: cartwrightian/owllistener
-    tags: true
+        tags: true
   skip_cleanup: true
+
