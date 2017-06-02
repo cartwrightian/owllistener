@@ -21,6 +21,5 @@ deploy:
   file: build/distributions/owllistener_0.1-${TRAVIS_BUILD_NUMBER}_all.deb
   on:
     repo: cartwrightian/owllistener
-    tags: true
   skip_cleanup: true
 
