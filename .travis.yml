@@ -13,8 +13,7 @@ addons:
   apt:
     packages:
     - oracle-java8-installer
-before_deploy:
-  - ./gradlew debianPackage
+before_deploy: ./gradlew debianPackage
 deploy:
   provider: releases
   api_key:
