@@ -83,7 +83,7 @@ task debianPackage(type: Deb) {
 
     configurationFile('/etc/defaults/owllistener')
 
-    requires('openjdk-8-jre-headless')
+    requires('oracle-java8-jdk')
 
     into '/opt/owllistener'
     from(configurations.runtime) {
