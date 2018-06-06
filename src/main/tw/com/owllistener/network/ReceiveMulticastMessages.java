@@ -19,10 +19,11 @@ public class ReceiveMulticastMessages {
     }
 
 	public void init() throws IOException {
-		logger.info(String.format("Listening on port %s address %s", configuration.getOwlPort(), configuration.getOwlMulicastAddress()));
-		socket = new MulticastSocket(configuration.getOwlPort());
+		int owlPort = configuration.getOwlPort();
+		logger.info(String.format("Listening on port %s address %s", owlPort, configuration.getOwlMulicastAddress()));
+		socket = new MulticastSocket(owlPort);
 		InetAddress address = InetAddress.getByName(configuration.getOwlMulicastAddress());
-		logger.info(String.format("Attempt joingGroup for socket:%s address:%s", socket.getNetworkInterface(),address));
+		logger.info(String.format("Attempt join Mulicast Group for port:%s address:%s", owlPort, address));
 		socket.joinGroup(address);
 	}
 

@@ -21,7 +21,7 @@ public class TestReceiveMessages {
 
 	@Test
 	@Category(IntegrationTest.class)
-	public void shouldReceiveAndParseMessage() throws IOException, XPathExpressionException, SAXException, ParserConfigurationException {
+	public void shouldReceiveAndParseMessage() throws IOException {
 		ReceiveMessages receiver = new ReceiveMessages(new TestConfiguration("url","bucketKey", "accessKey"),
 				new CurrentTime());
 		

@@ -27,12 +27,10 @@ public class EnergyMonitor  {
     public void loop() {
 		logger.info("Beginning processing");
 		try {
-			// TODO check init start, push exception handling down on level
 		    recorder.init();
 			receiver.init();
-		} catch (IOException e) {
+		} catch (InterruptedException e) {
 			logger.error("Unable to start", e);
-			return;
 		}
 
 		boolean running = true;

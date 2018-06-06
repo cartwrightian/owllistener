@@ -14,17 +14,29 @@ import tw.com.owllistener.network.configuration.ListenerConfiguration;
 
 public class ReceiveMessages {
     private static final Logger logger = LoggerFactory.getLogger(ReceiveMessages.class);
-	
-	private ReceiveMulticastMessages multicastReceiver;
+    private static final int TIMEOUT_SECS = 15;
+
+    private ReceiveMulticastMessages multicastReceiver;
 	private ParseMessages parser;
+	private boolean running;
 
 	public ReceiveMessages(ListenerConfiguration configuration, ProvidesDate providesDate) {
 		multicastReceiver = new ReceiveMulticastMessages(configuration);
 		parser = new ParseMessages(providesDate);
+		running = false;
 	}
 
-	public void init() throws IOException {
-		multicastReceiver.init();	
+	public void init() throws InterruptedException {
+	    while (!running) {
+	        logger.info("Try to init multicast reception");
+            try {
+                multicastReceiver.init();
+                running = true;
+            } catch (IOException exception) {
+                logger.error("Failed to start multicast reception ",exception);
+                Thread.sleep(TIMEOUT_SECS * 1000);
+            }
+        }
 	}
 
 	public Optional<EnergyMessage> receiveNextMessage() {

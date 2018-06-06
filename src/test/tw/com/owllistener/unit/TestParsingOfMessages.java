@@ -19,7 +19,7 @@ import tw.com.owllistener.network.ParseMessages;
 public class TestParsingOfMessages {
 	private String example = "<electricity id='4437190010E7'>"+
 					"<signal rssi='0' lqi='0'/>"+
-					"<battery level='10%'/>"+
+					"<battery level='39%'/>"+
 					"<chan id='0'><curr units='w'>354.00</curr><day units='wh'>3971.56</day></chan>"+
 					"<chan id='1'><curr units='w'>0.00</curr><day units='wh'>0.00</day></chan>"+
 					"<chan id='2'><curr units='w'>0.00</curr>"+"<day units='wh'>0.00</day></chan>"+
@@ -36,7 +36,7 @@ public class TestParsingOfMessages {
 
 		assertEquals("4437190010E7", message.getUnitMac());
 
-		assertEquals(new Integer(10), message.batteryLevel());
+		assertEquals(new Integer(39), message.batteryLevel());
 		assertEquals(3, message.getNumChannels());
 		EnergyMessageChannel channel = message.getChannel(0);
 		assertEquals(new Double(354.00), channel.getCurrent());
