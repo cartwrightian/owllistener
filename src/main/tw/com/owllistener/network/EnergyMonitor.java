@@ -1,18 +1,12 @@
 package tw.com.owllistener.network;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tw.com.owllistener.network.initialState.MarshalToJson;
+
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-
-import jersey.repackaged.com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-import tw.com.owllistener.network.initialState.MarshalToJson;
 
 public class EnergyMonitor  {
 	private static final Logger logger = LoggerFactory.getLogger(EnergyMonitor.class);

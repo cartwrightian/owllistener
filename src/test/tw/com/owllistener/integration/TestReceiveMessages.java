@@ -21,7 +21,7 @@ public class TestReceiveMessages {
 
 	@Test
 	@Category(IntegrationTest.class)
-	public void shouldReceiveAndParseMessage() throws IOException {
+	public void shouldReceiveAndParseMessage() throws InterruptedException {
 		ReceiveMessages receiver = new ReceiveMessages(new TestConfiguration("url","bucketKey", "accessKey"),
 				new CurrentTime());
 		
